@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/services/api';
 
 // ─── Types ─────────────────────────────────────────────────────
-interface Record {
+interface AttendanceRecord {
   date: string;
   in: string;
   out: string;
@@ -160,7 +160,7 @@ const StatCard = ({ label, value, sub, icon: Icon, color, glow, delay }: any) =>
 };
 
 // ─── Mini Calendar Heatmap ───────────────────────────────────────
-const CalendarHeatmap = ({ records }: { records: Record[] }) => {
+const CalendarHeatmap = ({ records }: { records: AttendanceRecord[] }) => {
   const grid = records.slice(0, 31);
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: '5px' }}>
@@ -202,14 +202,14 @@ export const EmployeeProfile = ({ employee: emp, onBack }: EmployeeProfileProps)
   const scfg = STATUS_CFG[emp.status] || STATUS_CFG.Good;
   const rec  = getRecommendation(emp.attendance_pct);
 
-  const dailyData = emp.records.map((r: Record) => ({
+  const dailyData = emp.records.map((r: AttendanceRecord) => ({
     date: r.date.slice(0, 5),
     hours: toHours(r.total),
     fullDate: r.date,
   }));
 
   let cumul = 0;
-  const cumulData = emp.records.map((r: Record) => {
+  const cumulData = emp.records.map((r: AttendanceRecord) => {
     cumul += toHours(r.total);
     return { date: r.date.slice(0, 5), cumulative: parseFloat(cumul.toFixed(1)) };
   });
@@ -562,7 +562,7 @@ export const EmployeeProfile = ({ employee: emp, onBack }: EmployeeProfileProps)
                 </tr>
               </thead>
               <tbody>
-                {emp.records.map((r: Record, i: number) => {
+                {emp.records.map((r: AttendanceRecord, i: number) => {
                   const rs = getRowStatus(r.total);
                   const hrs = toHours(r.total);
                   const [dd, mm, yyyy] = r.date.split('-');
